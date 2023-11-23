@@ -24,11 +24,12 @@ app.get('/',(req,res)=>{
 const roomNames = new Map();
 const roomUsers = new Map();
 
-function handleCreateRoom(socket, data) {
+function handleCreateRoom(socket, data,ack) {
   const { username, roomName, roomId } = data;
   socket.join(roomId);
   roomNames.set(roomId, roomName);
   roomUsers.set(roomId, [{ username, socketId: socket.id }]);
+  ack({ success: true });
 }
 
 function handleJoinRoom(socket, data) {
@@ -87,7 +88,7 @@ function handleDisconnect(socket) {
 }
 
 io.on('connection', (socket) => {
-  socket.on('create-room', (data) => handleCreateRoom(socket, data));
+  socket.on('create-room', (data, ack) => handleCreateRoom(socket, data, ack));
   socket.on('joinRoom', (data) => handleJoinRoom(socket, data));
   socket.on('send_message', (data) => handleSendMessage(socket, data));
   socket.on('exitRoom', (data) => handleExitRoom(socket, data));

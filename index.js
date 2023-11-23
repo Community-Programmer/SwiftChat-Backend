@@ -5,8 +5,10 @@ const cors = require('cors');
 const dotenv=require('dotenv');
 
 const app = express();
+
 dotenv.config()
 app.use(cors()); 
+
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
@@ -14,6 +16,10 @@ const io = socketIo(server, {
     methods: ['GET', 'POST']
   }
 });
+
+app.get('/',(req,res)=>{
+  res.send('200 - OK - SwiftChat backend Running')
+})
 
 const roomNames = new Map();
 const roomUsers = new Map();

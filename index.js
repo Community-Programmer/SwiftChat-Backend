@@ -21,6 +21,20 @@ app.get('/',(req,res)=>{
   res.send('200 - OK - SwiftChat backend Running')
 })
 
+
+app.get('/api/room/users/:roomId', (req, res) => {
+  const roomId = req.params.roomId;
+  const users = roomUsers.get(roomId) || [];
+
+  res.json({ users });
+});
+
+
+app.get('/api/rooms', (req, res) => {
+  const rooms = Array.from(roomNames.values());
+  res.json({ rooms });
+});
+
 const roomNames = new Map();
 const roomUsers = new Map();
 

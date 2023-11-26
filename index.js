@@ -85,19 +85,25 @@ function handleExitRoom(socket, data) {
     const roomName = roomNames.get(roomId);
     const users = roomUsers.get(roomId) || [];
     const updatedUsers = users.filter((user) => user.username !== username);
-
     roomUsers.set(roomId, updatedUsers);
     io.to(roomId).emit('user-exited', { username, roomId, roomName, users: updatedUsers });
+    if (updatedUsers.length === 0) {
+      roomNames.delete(roomId);
+    }
   } else {
     socket.emit('message', `Room ${roomId} does not exist`);
   }
 }
 
 function handleDisconnect(socket) {
+  console.log(socket)
   roomUsers.forEach((users, room) => {
     const updatedUsers = users.filter((user) => user.socketId !== socket.id);
     roomUsers.set(room, updatedUsers);
     io.to(room).emit('user-disconnected', { socketId: socket.id, users: updatedUsers });
+    if (updatedUsers.length === 0) {
+      roomNames.delete(room);
+    }
   });
 }
 

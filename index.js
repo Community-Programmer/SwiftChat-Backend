@@ -96,7 +96,7 @@ function handleExitRoom(socket, data) {
 }
 
 function handleDisconnect(socket) {
-  console.log(socket)
+  
   roomUsers.forEach((users, room) => {
     const updatedUsers = users.filter((user) => user.socketId !== socket.id);
     roomUsers.set(room, updatedUsers);
